@@ -7,5 +7,6 @@
 /build
 /captures
 .externalNativeBuild
-./app/build
-./openCVLibrary340/build
+/app/build
+/openCVLibrary340/build/*
+/.idea/vcs.xml
