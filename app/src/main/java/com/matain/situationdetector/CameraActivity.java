@@ -1,5 +1,6 @@
 package com.matain.situationdetector;
 
+import android.hardware.camera2.CameraManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import org.opencv.android.OpenCVLoader;
 
 public class CameraActivity extends AppCompatActivity {
     private final String LOG_TAG = CameraActivity.class.getSimpleName();
+    private CameraManager mCameraManager;
     private BaseLoaderCallback mOpenCVLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -33,6 +35,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        mCameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
     }
     @Override
     public void onResume(){
