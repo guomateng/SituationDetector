@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.matain.situationdetector.CameraActivity">
 
-    <TextureView
-        android:id = "@+id/tv_textview"
-        android:layout_height="0dp"
+    <SurfaceView
+        android:id="@+id/camera_surfaceview"
         android:layout_width="match_parent"
-        android:layout_weight="3"/>
+        android:layout_height="match_parent"
+        />
 
 </android.support.constraint.ConstraintLayout>
