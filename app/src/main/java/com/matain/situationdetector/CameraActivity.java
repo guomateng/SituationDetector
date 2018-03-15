@@ -1,6 +1,7 @@
 package com.matain.situationdetector;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
@@ -92,6 +93,18 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*ally the camera permission*/
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)){
+                logd("denied by user before");
+                Toast.makeText(this, "need camera permission !!!", Toast.LENGTH_LONG).show();
+            }
+            logd("request camera permission ...");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 1);
+        }else{
+            logd("camera permission have get");
+        }
         setContentView(R.layout.activity_camera);
         mCameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
         mSurfaceView = (SurfaceView) findViewById(R.id.camera_surfaceview);
@@ -107,6 +120,24 @@ public class CameraActivity extends AppCompatActivity {
             mOpenCVLoaderCallback.onManagerConnected(BaseLoaderCallback.SUCCESS);
         }
         initSurfaceView();
+    }
+
+    @Override
+    public void onRequestPermissionsResult (int requestCode,String permissions[], int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults.length > 0){
+            for (int i = 0; i < grantResults.length; i++) {
+                logd("grantResults = "+ grantResults[i]);
+            }
+        }
+        switch (requestCode){
+            case 1:
+                if(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    logd("camera permission was granted, yay !");
+                }
+                break;
+        }
     }
 
     void initSurfaceView(){
@@ -142,9 +173,6 @@ public class CameraActivity extends AppCompatActivity {
         mMainHandler = new Handler(getMainLooper());
         mImageReader = ImageReader.newInstance(mSurfaceView.getWidth(), mSurfaceView.getHeight(), ImageFormat.JPEG,7);
         try {
-            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                shouldShowRequestPermissionRationale(Manifest.permission.CAMERA);
-            }
             mCameraManager.openCamera(mCameraId, mCameraStateCallback,mCameraHandler);
         }catch (CameraAccessException e){
             loge("exception when open camera e;" + e);
